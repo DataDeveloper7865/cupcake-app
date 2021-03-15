@@ -1,11 +1,9 @@
 """Flask app for Cupcakes"""
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_debugtoolbar import DebugToolbarExtension
 
 from models import db, connect_db, Cupcake
-
-from env import USER_POSTGRES, PASSWORD_POSTGRES
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///cupcakes'
@@ -27,6 +25,12 @@ app.config['SECRET_KEY'] = "I'LL NEVER TELL!!"
 
 debug = DebugToolbarExtension(app)
 
+
+@app.route("/")
+def homepage():
+    """Renders the landing page"""
+
+    return render_template("index.html")
 
 @app.route("/api/cupcakes")
 def get_all_cupcakes():
