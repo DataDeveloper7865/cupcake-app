@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 class Cupcake(db.Model):
     """ This is the cupcake model class """
 
@@ -26,6 +27,8 @@ class Cupcake(db.Model):
         }
 
 # DO NOT MODIFY THIS FUNCTION
+
+
 def connect_db(app):
     """Connect to database."""
 
