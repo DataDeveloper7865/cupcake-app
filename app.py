@@ -5,8 +5,12 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from models import db, connect_db, Cupcake
 
+from env import USER_POSTGRES, PASSWORD_POSTGRES
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///cupcakes'
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{USER_POSTGRES}:{PASSWORD_POSTGRES}@127.0.0.1/cupcakes"
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
@@ -57,3 +61,32 @@ def create_cupcake():
     db.session.commit()
 
     return (jsonify(cupcake=cupcake.serialize()), 201)
+
+
+#PATCH
+@app.route("/api/cupcakes/<int:cupcake_id>", methods=["PATCH"])
+def update_cupcake(cupcake_id):
+    """Update a cupcake and return data about the new cupcake"""
+    cupcake = Cupcake.query.get_or_404(cupcake_id)
+    req = request.json
+
+    cupcake.flavor=req["flavor"]
+    cupcake.size=req["size"]
+    cupcake.rating=req["rating"]
+    cupcake.image=req["image"]
+ 
+    db.session.add(cupcake)
+    db.session.commit()
+
+    return (jsonify(cupcake=cupcake.serialize()))
+
+#DELETE
+@app.route("/api/cupcakes/<int:cupcake_id>", methods=["DELETE"])
+def delete_cupcake(cupcake_id):
+    """Return JSON for a single cupcake by id"""
+    cupcake = Cupcake.query.get_or_404(cupcake_id)
+
+    db.session.delete(cupcake)
+    db.session.commit()
+
+    return jsonify(message="Deleted")
